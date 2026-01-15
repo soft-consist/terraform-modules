@@ -1,10 +1,26 @@
-variable "env" {}
-variable "vpc_id" {}
-variable "subnet_id" {}
+variable "env" {
+  type = string
+}
 
-variable "ami" {}
-variable "instance_type" {}
-variable "key_name" {}
+variable "vpc_id" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "ami" {
+  type = string
+}
+
+variable "instance_type" {
+  type = string
+}
+
+variable "key_name" {
+  type = string
+}
 
 variable "allowed_ssh_cidr" {
   type = list(string)

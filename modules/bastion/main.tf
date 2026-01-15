@@ -1,19 +1,28 @@
-resource "aws_instance" "bastion" {
-  ami                         = var.bastion_ami
-  instance_type               = var.bastion_instance_type
-  subnet_id                   = var.bastion_subnet_id
-  key_name                    = var.bastion_key_name
-  associate_public_ip_address = true
+resource "aws_security_group" "this" {
+  name   = "${var.env}-bastion-sg"
+  vpc_id = var.vpc_id
 
-  iam_instance_profile = aws_iam_instance_profile.bastion_profile.name
-
-  tags = {
-    Name = "${var.env}-BastionHost"
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_ssh_cidr
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    { Name = "${var.env}-bastion-sg" },
+    var.tags
+  )
 }
 
-
-resource "aws_iam_role" "bastion_role" {
+resource "aws_iam_role" "this" {
   name = "${var.env}-bastion-role"
 
   assume_role_policy = jsonencode({
@@ -26,18 +35,25 @@ resource "aws_iam_role" "bastion_role" {
   })
 }
 
-
-resource "aws_iam_role_policy_attachment" "bastion_eks_access" {
-  role       = aws_iam_role.bastion_role.name
+resource "aws_iam_role_policy_attachment" "eks_access" {
+  role       = aws_iam_role.this.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-
-resource "aws_iam_role_policy_attachment" "bastion_describe" {
-  role       = aws_iam_role.bastion_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+resource "aws_iam_instance_profile" "this" {
+  role = aws_iam_role.this.name
 }
 
-resource "aws_iam_instance_profile" "bastion_profile" {
-  role = aws_iam_role.bastion_role.name
+resource "aws_instance" "bastion" {
+  ami           = var.ami
+  instance_type = var.instance_type
+  subnet_id     = var.subnet_id
+  key_name      = var.key_name
+
+  associate_public_ip_address = true
+
+  tags = merge(
+    { Name = "${var.env}-bastion" },
+    var.tags
+  )
 }

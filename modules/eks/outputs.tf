@@ -3,7 +3,7 @@ output "cluster_name" {
   value       = aws_eks_cluster.this.name
 }
 
-output "eks_cluster_endpoint" {
+output "cluster_endpoint" {
   description = "EKS Cluster Endpoint"
   value       = aws_eks_cluster.this.endpoint
 }

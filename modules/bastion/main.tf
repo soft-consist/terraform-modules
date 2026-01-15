@@ -51,6 +51,7 @@ resource "aws_instance" "bastion" {
   key_name      = var.key_name
 
   associate_public_ip_address = true
+  user_data = file("${path.module}/user_data.sh")
 
   tags = merge(
     { Name = "${var.env}-bastion" },

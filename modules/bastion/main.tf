@@ -47,7 +47,7 @@ resource "aws_iam_instance_profile" "this" {
 resource "aws_instance" "bastion" {
   ami           = var.ami
   instance_type = var.instance_type
-  subnet_id     = var.subnet_id
+  subnet_id     = element(var.public_subnet_ids, 0)
   key_name      = var.key_name
 
   associate_public_ip_address = true

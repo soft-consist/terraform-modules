@@ -5,3 +5,7 @@ output "aws_vpc" {
 output "private_subnets_ids" {
   value = aws_subnet.private[*].id
 }
+
+output "region" {
+  value = var.region
+}

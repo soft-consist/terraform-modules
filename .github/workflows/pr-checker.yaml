@@ -1,38 +1,20 @@
-name: PR Approval Check & Auto Assign
+name: PR Approval Check
 
 on:
-  pull_request:
-    types:
-      - opened
-      - ready_for_review
-      - synchronize
   pull_request_review:
     types:
       - submitted
       - dismissed
 
 permissions:
-  pull-requests: write   # REQUIRED for auto-assign
+  pull-requests: read
   contents: read
 
 jobs:
-  pr-approval:
+  check-approval:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Auto assign reviewers
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.pulls.requestReviewers({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              reviewers: ["ashubambal", "Kalyani-Bambal"]
-            });
-
-      - name: Check PR approval status
+      - name: Check PR Review Status
         uses: actions/github-script@v7
         with:
           script: |
@@ -44,9 +26,7 @@ jobs:
               pull_number: prNumber
             });
 
-            const approvals = reviews.data.filter(
-              r => r.state === "APPROVED"
-            );
+            const approvals = reviews.filter(r => r.state === "APPROVED");
 
             if (approvals.length === 0) {
               core.setFailed("❌ PR is NOT approved. At least one approval is required.");

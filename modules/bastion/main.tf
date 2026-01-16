@@ -49,6 +49,8 @@ resource "aws_instance" "bastion" {
   instance_type = var.instance_type
   subnet_id     = element(var.public_subnet_ids, 0)
   key_name      = var.key_name
+  security_groups = [aws_security_group.this.id]
+  iam_instance_profile = aws_iam_instance_profile.this.name
 
   associate_public_ip_address = true
   user_data = file("${path.module}/user_data.sh")

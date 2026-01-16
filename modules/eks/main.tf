@@ -24,8 +24,8 @@ resource "aws_eks_cluster" "this" {
 
   vpc_config {
     subnet_ids              = var.private_subnet_ids
-    endpoint_private_access = true
-    endpoint_public_access  = false
+    endpoint_private_access = false
+    endpoint_public_access  = true
   }
 
   tags = merge(
@@ -100,19 +100,27 @@ resource "aws_security_group_rule" "alloow_private_endpoint_access" {
   description         = "Allow access to EKS cluster endpoint from allowed CIDR blocks"
 }
 
-# Kubernetes Config Map for AWS Auth
-resource "kubernetes_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
+# # Kubernetes Config Map for AWS Auth
+# resource "kubernetes_config_map" "aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
 
-  data = {
-    mapRoles = <<YAML
-- rolearn: arn:aws:iam::041326371952:role/bastion-eks-role
-  username: bastion-admin
-  groups:
-    - system:masters
-YAML
-  }
-}
+#   data = {
+#     mapRoles = <<YAML
+# - rolearn: arn:aws:iam::041326371952:role/bastion-eks-role
+#   username: bastion-admin
+#   groups:
+#     - system:masters
+# YAML
+#   }
+# }
+
+# data "aws_eks_cluster" "this" {
+#   name = aws_eks_cluster.this.name
+# }
+
+# data "aws_eks_cluster_auth" "this" {
+#   name = aws_eks_cluster.this.name
+# }

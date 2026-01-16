@@ -29,3 +29,4 @@ variable "allowed_ssh_cidr" {
 variable "tags" {
   type = map(string)
 }
+

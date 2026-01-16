@@ -24,8 +24,8 @@ resource "aws_eks_cluster" "this" {
 
   vpc_config {
     subnet_ids              = var.private_subnet_ids
-    endpoint_private_access = true
-    endpoint_public_access  = false
+    endpoint_private_access = false
+    endpoint_public_access  = true
   }
 
   tags = merge(
@@ -115,4 +115,12 @@ resource "kubernetes_config_map" "aws_auth" {
     - system:masters
 YAML
   }
+}
+
+data "aws_eks_cluster" "this" {
+  name = aws_eks_cluster.this.name
+}
+
+data "aws_eks_cluster_auth" "this" {
+  name = aws_eks_cluster.this.name
 }

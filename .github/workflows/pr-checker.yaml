@@ -1,53 +1,56 @@
-name: PR Approval Check
+name: PR Approval Check & Auto Assign
 
 on:
   pull_request:
     types:
       - opened
-      - synchronize
-      - reopened
-      - edited
-      - review_requested
-      - review_request_removed
       - ready_for_review
-      - converted_to_draft
-      - unlocked
-      - auto_merge_enabled
-      - auto_merge_disabled
-      - submitted
-  
+      - synchronize
   pull_request_review:
     types:
       - submitted
-      - edited
       - dismissed
+
 permissions:
-  pull-requests: read
+  pull-requests: write   # REQUIRED for auto-assign
   contents: read
-  
+
 jobs:
-  check-approval:
+  pr-approval:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check PR Review Status
-        id: check
+      - name: Auto assign reviewers
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              reviewers: ["ashubambal", "Kalyani-Bambal"],
+              team_reviewers: ["softconsist-in"]
+            });
+
+      - name: Check PR approval status
         uses: actions/github-script@v7
         with:
           script: |
             const prNumber = context.issue.number;
 
-            // Fetch all reviews of the PR
             const reviews = await github.rest.pulls.listReviews({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: prNumber
             });
 
-            // Find approvals
-            const approvedReviews = reviews.data.filter(r => r.state === "APPROVED");
+            const approvals = reviews.data.filter(
+              r => r.state === "APPROVED"
+            );
 
-            if (approvedReviews.length === 0) {
+            if (approvals.length === 0) {
               core.setFailed("❌ PR is NOT approved. At least one approval is required.");
             } else {
-              console.log("✔ Approved by:", approvedReviews.map(r => r.user.login));
+              console.log("✔ Approved by:", approvals.map(r => r.user.login));
             }

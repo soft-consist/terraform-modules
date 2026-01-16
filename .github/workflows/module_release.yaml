@@ -23,7 +23,7 @@ jobs:
       - name: Get latest tag
         id: get_tag
         run: |
-          get fetch --tags
+          git fetch --tags
           TAG=$(git tag --sort=-v:refname | head -n 1)
           if [ -z "$TAG" ]; then
             echo "No tags found, setting TAG to v0.0.0"

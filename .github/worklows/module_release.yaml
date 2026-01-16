@@ -1,0 +1,13 @@
+name: Module Release
+
+workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/**'
+      - '.github/workflows/module_release.yaml'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest

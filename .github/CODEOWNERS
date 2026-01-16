@@ -1,0 +1,5 @@
+# Default code owener for all code changes
+* @ashubambal @Kalyani-Bambal @softconsist-in
+
+# Reviewer by email for .tf files
+*.tf ashutoshbambal97@gmail.com kalyanibambal05@yahoo.com

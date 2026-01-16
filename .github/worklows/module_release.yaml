@@ -1,13 +1,49 @@
 name: Module Release
 
-workflow_dispatch:
-  push:
+on:
+  pull_request:
     branches:
       - main
+    types:
+      - closed
     paths:
       - 'modules/**'
-      - '.github/workflows/module_release.yaml'
 
 jobs:
   release:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          get fetch --tags
+          TAG=$(git tag --sort=-v:refname | head -n 1)
+          if [ -z "$TAG" ]; then
+            echo "No tags found, setting TAG to v0.0.0"
+            TAG="v0.0.0"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+      
+      - name: Calculate next version
+        id: next_version
+        run: |
+          TAG=${{ steps.get_tag.outputs.tag }}
+          VERSION=${TAG#v}
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          PATCH=$((PATCH + 1))
+
+          NEXT_TAG="v$MAJOR.$MINOR.$PATCH"
+          echo "next_tag=$NEXT_TAG" >> $GITHUB_OUTPUT
+
+      - name: Create new tag
+        run: |
+          git tag ${{ steps.next_version.outputs.next_tag }}
+          git push origin ${{ steps.next_version.outputs.next_tag }}

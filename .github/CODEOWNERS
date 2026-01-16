@@ -1,5 +1,5 @@
-# Default code owener for all code changes
-* @ashubambal @Kalyani-Bambal @softconsist-in
+# Default code owners for all changes
+* @ashubambal @kalyani-bambal @soft-consist/softconsist-in
 
-# Reviewer by email for .tf files
-*.tf ashutoshbambal97@gmail.com kalyanibambal05@yahoo.com
+# Terraform file owners
+*.tf @ashubambal @kalyani-bambal @soft-consist/softconsist-in

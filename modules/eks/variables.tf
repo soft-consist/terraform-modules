@@ -58,11 +58,6 @@ variable "allowd_cidr_blocks" {
   default = []
 }
 
-# variable "bastion_role_arn" {
-#   description = "IAM role ARN allowed to access EKS cluster"
-#   type        = string
-# }
-
 variable "bastion_access_role_arn" {
   description = "IAM role ARN used for bastion access to EKS"
   type        = string

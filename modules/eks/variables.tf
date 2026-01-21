@@ -57,11 +57,3 @@ variable "allowd_cidr_blocks" {
   type        = list(string)
   default = []
 }
-
-variable "aws_auth_roles" {
-  type = list(object({
-    rolearn  = string
-    username = string
-    groups   = list(string)
-  }))
-}

@@ -14,7 +14,7 @@ output "cluster_ca" {
 }
 
 output "oidc_provider_arn" {
-  value = aws_eks_cluster.this.oidc.issuer_url
+  value = oids.aws_iam_openid_connect_provider.this.arn
 }
 
 output "oidc_provider_url" {

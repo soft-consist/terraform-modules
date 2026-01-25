@@ -21,3 +21,9 @@ variable "ebs_csi_driver_version" {
 variable "efs_csi_driver_version" {
   type = string
 }
+
+variable "ebs_csi_role_arn" {
+  description = "IRSA role ARN for EBS CSI driver"
+  type        = string
+  default     = null
+}

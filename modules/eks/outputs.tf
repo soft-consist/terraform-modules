@@ -14,7 +14,7 @@ output "cluster_ca" {
 }
 
 output "oidc_provider_arn" {
-  value = oids.aws_iam_openid_connect_provider.this.arn
+  value = aws_iam_openid_connect_provider.this.arn
 }
 
 output "oidc_provider_url" {

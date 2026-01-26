@@ -2,7 +2,6 @@ resource "kubernetes_namespace" "argocd" {
   metadata {
     name = var.namespace
   }
-  depends_on = [kubernetes_config_map.aws_auth]
 }
 
 resource "helm_release" "argocd" {

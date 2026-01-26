@@ -19,7 +19,3 @@ resource "helm_release" "argocd" {
 resource "kubectl_manifest" "argocd_bootstrap" {
   yaml_body = file(var.bootstrap_file)
 }
-
-variable "bootstrap_file" {
-  type = string
-}

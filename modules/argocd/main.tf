@@ -15,3 +15,7 @@ resource "helm_release" "argocd" {
     kubernetes_namespace.argocd
   ]
 }
+
+resource "kubectl_manifest" "argocd_bootstrap" {
+  yaml_body = file(var.bootstrap_file)
+}

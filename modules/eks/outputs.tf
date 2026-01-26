@@ -20,3 +20,7 @@ output "oidc_provider_arn" {
 output "oidc_provider_url" {
   value = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
+
+output "cluster_ca_certificate" {
+  value = aws_eks_cluster.this.certificate_authority[0].data
+}

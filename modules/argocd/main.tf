@@ -14,16 +14,17 @@ resource "helm_release" "argocd" {
   values = var.values
 
   create_namespace = false
-
-  wait = true
-  timeout = 600
+  wait             = true
+  timeout          = 600
 
   depends_on = [
     kubernetes_namespace.argocd
   ]
 }
 
+# OPTIONAL (safer approach)
 resource "kubectl_manifest" "argocd_bootstrap" {
+  count = var.enable_bootstrap ? 1 : 0
 
   yaml_body = file(var.bootstrap_file)
 
